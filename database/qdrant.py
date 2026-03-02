@@ -9,7 +9,7 @@ from qdrant_client import AsyncQdrantClient
 from qdrant_client.http import models
 from structlog import get_logger
 
-from ingest_core.config import QdrantSettings
+from config import QdrantSettings
 
 logger = get_logger()
 

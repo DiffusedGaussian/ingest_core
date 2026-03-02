@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
+from analyzers.base import BaseAnalyzer, AnalyzerResult
 
 
 class EXIFAnalyzer(BaseAnalyzer):

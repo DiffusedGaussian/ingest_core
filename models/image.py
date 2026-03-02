@@ -4,7 +4,7 @@ Image asset model with image-specific metadata.
 
 from pydantic import BaseModel, Field
 
-from ingest_core.models.asset import Asset, AssetType
+from models.asset import Asset, AssetType
 
 
 class ImageMetadata(BaseModel):

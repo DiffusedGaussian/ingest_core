@@ -7,7 +7,7 @@ Provides HTTP endpoints for:
 - Health checks
 """
 
-from ingest_core.api.app import create_app
-from ingest_core.api.routes import router
+from api.app import create_app
+from api.routes import router
 
 __all__ = ["create_app", "router"]

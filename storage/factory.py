@@ -4,10 +4,9 @@ Storage backend factory.
 Creates the appropriate storage backend based on configuration.
 """
 
-from ingest_core.config import Settings
-from ingest_core.storage.base import StorageBackend
-from ingest_core.storage.local import LocalStorageBackend
-from ingest_core.storage.gcs import GCSStorageBackend
+from config import Settings
+from storage.base import StorageBackend
+from storage.local import LocalStorage
 
 
 def get_storage_backend(settings: Settings) -> StorageBackend:
@@ -20,12 +19,13 @@ def get_storage_backend(settings: Settings) -> StorageBackend:
     Returns:
         StorageBackend: Configured storage backend
     """
-    if settings.use_gcs:
+    if settings.storage.storage_backend == "gcs":
+        from storage.gcs import GCSStorageBackend
         return GCSStorageBackend(
-            bucket_name=settings.storage.gcs_bucket_name,
+            bucket_name=settings.storage.gcs_bucket,
             project_id=settings.storage.gcs_project_id,
         )
     else:
-        return LocalStorageBackend(
-            base_path=settings.storage.local_storage_path
+        return LocalStorage(
+            root_dir=settings.paths.data_dir / "storage"
         )

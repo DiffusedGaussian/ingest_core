@@ -9,7 +9,7 @@ import io
 
 from google.cloud import storage
 
-from ingest_core.storage.base import StorageBackend
+from storage.base import StorageBackend
 
 
 class GCSStorageBackend(StorageBackend):

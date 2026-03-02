@@ -6,7 +6,7 @@ Services orchestrate the application logic:
 - AssetService: Asset CRUD operations
 """
 
-from ingest_core.services.ingestion import IngestionService
-from ingest_core.services.asset import AssetService
+from services.ingestion import IngestionService
+from services.asset import AssetService
 
 __all__ = ["IngestionService", "AssetService"]

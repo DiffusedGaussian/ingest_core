@@ -6,8 +6,8 @@ Detects objects and subjects in images using VLM or dedicated models.
 
 from pathlib import Path
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
-from ingest_core.config import Settings
+from analyzers.base import BaseAnalyzer, AnalyzerResult
+from config import Settings
 
 
 class ObjectDetectionAnalyzer(BaseAnalyzer):

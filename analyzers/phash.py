@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 import imagehash
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
+from analyzers.base import BaseAnalyzer, AnalyzerResult
 
 
 class PerceptualHashAnalyzer(BaseAnalyzer):

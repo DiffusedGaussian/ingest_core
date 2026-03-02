@@ -8,7 +8,7 @@ from typing import Any
 from PIL import Image, UnidentifiedImageError
 from structlog import get_logger
 
-from ingest_core.processor.base import BaseProcessor
+from processors.base import BaseProcessor
 
 logger = get_logger()
 

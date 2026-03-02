@@ -11,8 +11,8 @@ import tempfile
 
 import cv2
 
-from ingest_core.processors.base import BaseProcessor
-from ingest_core.config import Settings, get_settings
+from processors.base import BaseProcessor
+from config import Settings, get_settings
 
 
 class VideoProcessor(BaseProcessor):

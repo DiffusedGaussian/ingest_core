@@ -7,7 +7,7 @@ Will handle GLB/GLTF and FBX files.
 from pathlib import Path
 from typing import Any
 
-from ingest_core.processors.base import BaseProcessor
+from processors.base import BaseProcessor
 
 
 class Asset3DProcessor(BaseProcessor):

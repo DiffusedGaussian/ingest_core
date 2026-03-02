@@ -7,7 +7,7 @@ from typing import Any
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from structlog import get_logger
 
-from ingest_core.config import MongoDBSettings
+from config import MongoDBSettings
 
 logger = get_logger()
 

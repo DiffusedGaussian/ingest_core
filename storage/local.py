@@ -7,8 +7,8 @@ from typing import BinaryIO, AsyncGenerator
 import aiofiles
 import os
 
-from ingest_core.storage.base import StorageBackend
-from ingest_core.config import Settings
+from storage.base import StorageBackend
+from config import Settings
 
 
 class LocalStorage(StorageBackend):

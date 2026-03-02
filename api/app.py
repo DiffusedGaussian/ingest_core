@@ -6,8 +6,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from ingest_core.api.routes import router
-from ingest_core.container import get_container
+from api.routes import router
+from container import get_container
 
 
 @asynccontextmanager

@@ -9,10 +9,10 @@ from uuid import uuid4
 
 from structlog import get_logger
 
-from ingest_core.models.asset import Asset, AssetType, AssetStatus
+from models.asset import Asset, AssetType, AssetStatus
 
 if TYPE_CHECKING:
-    from ingest_core.container.container import Container
+    from container.container import Container
 
 logger = get_logger()
 
@@ -115,16 +115,13 @@ class IngestionService:
                 temp_path = self.container.settings.paths.temp_dir / f"{asset.id}{asset.file_extension}"
 
                 # Download to temp
-                async with self.container.storage.get(asset.storage_path) as stream:
-                     with open(temp_path, "wb") as f:
-                         async for chunk in stream:
-                             f.write(chunk)
+                async for chunk in self.container.storage.get(asset.storage_path):
+                     with open(temp_path, "ab") as f:
+                         f.write(chunk)
 
                 try:
-                    processor = self.container.get_processor("image") # Wait, container doesn't have get_processor yet?
-                    # We haven't registered processors in container yet.
                     # Let's import directly for now or fix container.
-                    from ingest_core.processor.image import ImageProcessor
+                    from processors.image import ImageProcessor
                     processor = ImageProcessor()
 
                     # Validate

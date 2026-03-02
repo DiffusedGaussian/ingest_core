@@ -10,6 +10,6 @@ Provides a centralized container for managing dependencies:
 Uses a simple registry pattern for DI without external frameworks.
 """
 
-from ingest_core.container.container import Container, get_container
+from container.container import Container, get_container
 
 __all__ = ["Container", "get_container"]

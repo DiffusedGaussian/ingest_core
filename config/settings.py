@@ -19,7 +19,7 @@ Settings are organized into logical groups:
 - PluginSettings: Analyzer plugin system config
 
 Usage:
-    from ingest_core.config import get_settings
+    from config import get_settings
 
     settings = get_settings()
     print(settings.paths.data_dir)

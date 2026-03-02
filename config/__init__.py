@@ -10,6 +10,36 @@ Handles all environment variables and configuration for:
 - API server settings
 """
 
-from ingest_core.config.settings import Settings, get_settings
+from config.settings import (
+    Settings,
+    get_settings,
+    PathSettings,
+    StorageSettings,
+    MongoDBSettings,
+    QdrantSettings,
+    SQLiteSettings,
+    GeminiSettings,
+    LocalVLMSettings,
+    WhisperSettings,
+    ProcessingSettings,
+    APISettings,
+    LoggingSettings,
+    PluginSettings,
+)
 
-__all__ = ["Settings", "get_settings"]
+__all__ = [
+    "Settings",
+    "get_settings",
+    "PathSettings",
+    "StorageSettings",
+    "MongoDBSettings",
+    "QdrantSettings",
+    "SQLiteSettings",
+    "GeminiSettings",
+    "LocalVLMSettings",
+    "WhisperSettings",
+    "ProcessingSettings",
+    "APISettings",
+    "LoggingSettings",
+    "PluginSettings",
+]

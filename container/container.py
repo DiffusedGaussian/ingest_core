@@ -16,7 +16,7 @@ Design principles:
 from functools import lru_cache
 from typing import Any, TypeVar, Callable
 
-from ingest_core.config import Settings, get_settings
+from config import Settings, get_settings
 
 T = TypeVar("T")
 
@@ -52,7 +52,7 @@ class Container:
             StorageBackend: Abstract storage interface
         """
         if "storage" not in self._instances:
-            from ingest_core.storage import get_storage_backend
+            from storage.factory import get_storage_backend
             self._instances["storage"] = get_storage_backend(self._settings)
         return self._instances["storage"]
 
@@ -67,10 +67,10 @@ class Container:
         """
         if "db" not in self._instances:
             if self._settings.database_backend == "mongodb":
-                from ingest_core.database.mongodb import MongoDBClient
+                from database.mongodb import MongoDBClient
                 self._instances["db"] = MongoDBClient(self._settings.mongodb)
             else:
-                from ingest_core.database.sqlite import SQLiteClient
+                from database.sqlite import SQLiteClient
                 self._instances["db"] = SQLiteClient(self._settings.sqlite)
         return self._instances["db"]
 
@@ -81,13 +81,14 @@ class Container:
         """
         if "vector_db" not in self._instances:
             if self._settings.vector_database_backend == "qdrant":
-                from ingest_core.database.qdrant import QdrantRepository
+                from database.qdrant import QdrantRepository
                 self._instances["vector_db"] = QdrantRepository(self._settings.qdrant)
             else:
-                # Fallback to local/mock vector storage if needed
-                # For now, we still use Qdrant or a local implementation
-                from ingest_core.database.qdrant import QdrantRepository
-                self._instances["vector_db"] = QdrantRepository(self._settings.qdrant)
+                from database.faiss_db import FaissRepository
+                self._instances["vector_db"] = FaissRepository(
+                    data_dir=self._settings.paths.data_dir / "faiss",
+                    dimension=1536 # Default for many embedding models
+                )
         return self._instances["vector_db"]
 
     @property
@@ -143,7 +144,7 @@ class Container:
 
     def load_default_analyzers(self) -> None:
         """Load the default set of analyzers."""
-        from ingest_core.analyzers import (
+        from analyzers import (
             EXIFAnalyzer,
             PerceptualHashAnalyzer,
             ObjectDetectionAnalyzer,
@@ -168,7 +169,7 @@ class Container:
             IngestionService: Orchestrates the ingestion pipeline
         """
         if "ingestion_service" not in self._instances:
-            from ingest_core.services.ingestion import IngestionService
+            from services.ingestion import IngestionService
             self._instances["ingestion_service"] = IngestionService(self)
         return self._instances["ingestion_service"]
 
@@ -181,7 +182,7 @@ class Container:
             AssetService: CRUD operations for assets
         """
         if "asset_service" not in self._instances:
-            from ingest_core.services.asset import AssetService
+            from services.asset import AssetService
             self._instances["asset_service"] = AssetService(self)
         return self._instances["asset_service"]
 

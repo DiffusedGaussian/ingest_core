@@ -8,10 +8,10 @@ from uuid import UUID
 
 from structlog import get_logger
 
-from ingest_core.models.asset import Asset, AssetStatus
+from models.asset import Asset, AssetStatus
 
 if TYPE_CHECKING:
-    from ingest_core.container.container import Container
+    from container.container import Container
 
 logger = get_logger()
 

@@ -7,7 +7,7 @@ The interface is defined but implementation is deferred.
 
 from pydantic import BaseModel, Field
 
-from ingest_core.models.asset import Asset, AssetType
+from models.asset import Asset, AssetType
 
 
 class Asset3DMetadata(BaseModel):
