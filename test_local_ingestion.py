@@ -7,8 +7,8 @@ import mimetypes
 # Add the project root to sys.path
 sys.path.append(os.getcwd())
 
-from container.container import Container
-from config.settings import get_settings
+from ingest_core.container.container import Container
+from ingest_core.config.settings import get_settings
 
 async def test_ingestion():
     # 1. Initialize settings and container
