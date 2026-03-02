@@ -1,0 +1,79 @@
+[project]
+name = "ingest-core"
+version = "0.1.0"
+description = "Foundation data layer for generative AI - sophisticated ingestion pipeline for images, videos, and 3D assets"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { text = "MIT" }
+authors = [{ name = "Your Name", email = "you@example.com" }]
+
+dependencies = [
+    # Core
+    "pydantic>=2.0,<3.0",
+    "pydantic-settings>=2.0,<3.0",
+    
+    # API & CLI
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "typer[all]>=0.9.0",
+    
+    # Database
+    "pymongo>=4.6.0",
+    "qdrant-client>=1.7.0",
+    "aiosqlite>=0.19.0",
+    
+    # Storage
+    "google-cloud-storage>=2.14.0",
+    "aiofiles>=23.2.0",
+    
+    # Media Processing
+    "pillow>=10.2.0",
+    "opencv-python-headless>=4.9.0",
+    "ffmpeg-python>=0.2.0",
+    "imagehash>=4.3.1",
+    
+    # ML & VLM
+    "google-generativeai>=0.4.0",
+    "openai-whisper>=20231117",
+    "transformers>=4.37.0",
+    "torch>=2.1.0",
+    
+    # Utilities
+    "httpx>=0.26.0",
+    "python-multipart>=0.0.6",
+    "structlog>=24.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.2.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+]
+
+[project.scripts]
+ingest = "ingest_core.cli.main:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
