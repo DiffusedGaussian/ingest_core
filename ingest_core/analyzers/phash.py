@@ -5,10 +5,11 @@ Computes perceptual hashes for duplicate/similarity detection.
 """
 
 from pathlib import Path
-from PIL import Image
-import imagehash
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
+import imagehash
+from PIL import Image
+
+from ingest_core.analyzers.base import AnalyzerResult, BaseAnalyzer
 
 
 class PerceptualHashAnalyzer(BaseAnalyzer):

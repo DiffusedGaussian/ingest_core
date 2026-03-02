@@ -6,8 +6,8 @@ Defines the interface all analyzers must implement.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 
 @dataclass

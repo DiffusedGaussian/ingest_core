@@ -4,10 +4,10 @@ VLM (Vision Language Model) analyzer.
 Generates rich descriptions of images using Gemini or local LLaVA.
 """
 
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
+from ingest_core.analyzers.base import AnalyzerResult, BaseAnalyzer
 from ingest_core.config import Settings
 
 
@@ -52,8 +52,8 @@ class VLMAnalyzer(BaseAnalyzer):
         """Lazy-load local LLaVA model."""
         if self._llava_model is None and self.settings.local_vlm.enabled:
             # Import only when needed (heavy dependencies)
-            from transformers import LlavaNextProcessor, LlavaNextForConditionalGeneration
             import torch
+            from transformers import LlavaNextForConditionalGeneration, LlavaNextProcessor
 
             model_id = self.settings.local_vlm.model
             device = self.settings.local_vlm.device
@@ -124,8 +124,8 @@ COLORS: [color1, color2, ...]"""
     async def _analyze_with_llava(self, file_path: Path) -> AnalyzerResult:
         """Analyze image with local LLaVA model."""
         try:
-            from PIL import Image
             import torch
+            from PIL import Image
 
             model = self._get_llava_model()
             if model is None:

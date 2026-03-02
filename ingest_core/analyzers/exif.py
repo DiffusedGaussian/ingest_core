@@ -5,10 +5,11 @@ Extracts technical metadata from images (camera info, GPS, etc.).
 """
 
 from pathlib import Path
-from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
+from PIL import Image
+from PIL.ExifTags import GPSTAGS, TAGS
+
+from ingest_core.analyzers.base import AnalyzerResult, BaseAnalyzer
 
 
 class EXIFAnalyzer(BaseAnalyzer):

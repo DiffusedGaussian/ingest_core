@@ -1,9 +1,10 @@
-import os
-from pathlib import Path
-import numpy as np
-import faiss
 import pickle
-from typing import List, Dict, Any, Optional
+from pathlib import Path
+from typing import Any
+
+import faiss
+import numpy as np
+
 
 class FaissRepository:
     """
@@ -20,7 +21,7 @@ class FaissRepository:
     async def initialize(self) -> None:
         """Initialize FAISS index."""
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
+
         if self.index_path.exists():
             self.index = faiss.read_index(str(self.index_path))
             with open(self.metadata_path, "rb") as f:
@@ -29,18 +30,18 @@ class FaissRepository:
             self.index = faiss.IndexFlatL2(self.dimension)
             self.metadata = []
 
-    async def upsert(self, id: str, vector: List[float], payload: Dict[str, Any] = None) -> None:
+    async def upsert(self, id: str, vector: list[float], payload: dict[str, Any] = None) -> None:
         """Add a vector to the index."""
         vector_np = np.array([vector]).astype('float32')
         self.index.add(vector_np)
         self.metadata.append({"id": id, "payload": payload or {}})
         await self.save()
 
-    async def search(self, vector: List[float], limit: int = 10) -> List[Dict[str, Any]]:
+    async def search(self, vector: list[float], limit: int = 10) -> list[dict[str, Any]]:
         """Search for similar vectors."""
         vector_np = np.array([vector]).astype('float32')
         distances, indices = self.index.search(vector_np, limit)
-        
+
         results = []
         for i, idx in enumerate(indices[0]):
             if idx != -1 and idx < len(self.metadata):

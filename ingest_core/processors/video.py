@@ -5,14 +5,14 @@ Handles video-specific operations including keyframe extraction
 and audio transcription.
 """
 
+import tempfile
 from pathlib import Path
 from typing import Any
-import tempfile
 
 import cv2
 
-from ingest_core.processors.base import BaseProcessor
 from ingest_core.config import Settings, get_settings
+from ingest_core.processors.base import BaseProcessor
 
 
 class VideoProcessor(BaseProcessor):

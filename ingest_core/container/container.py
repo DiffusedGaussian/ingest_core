@@ -14,7 +14,7 @@ Design principles:
 """
 
 from functools import lru_cache
-from typing import Any, TypeVar, Callable
+from typing import Any, Callable, TypeVar
 
 from ingest_core.config import Settings, get_settings
 
@@ -146,8 +146,8 @@ class Container:
         """Load the default set of analyzers."""
         from ingest_core.analyzers import (
             EXIFAnalyzer,
-            PerceptualHashAnalyzer,
             ObjectDetectionAnalyzer,
+            PerceptualHashAnalyzer,
             VLMAnalyzer,
         )
 

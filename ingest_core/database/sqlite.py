@@ -2,9 +2,10 @@
 SQLite client wrapper.
 """
 
-import aiosqlite
 import json
 from typing import Any, Dict, List, Optional
+
+import aiosqlite
 from structlog import get_logger
 
 from ingest_core.config import SQLiteSettings
@@ -45,7 +46,7 @@ class SQLiteClient:
 
             # Enable WAL mode for better concurrency
             await self._conn.execute("PRAGMA journal_mode=WAL;")
-            
+
             # Create a generic assets table
             await self._conn.execute("""
                 CREATE TABLE IF NOT EXISTS assets (
@@ -67,7 +68,7 @@ class SQLiteClient:
             logger.info("Disconnected from SQLite")
 
     # Minimal MongoDB-like API for Assets
-    
+
     async def insert_one(self, document: Dict[str, Any]) -> None:
         """Mimic MongoDB insert_one."""
         doc_id = document.get("_id") or document.get("id")

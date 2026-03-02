@@ -4,12 +4,12 @@ Ingestion orchestration service.
 
 import mimetypes
 from pathlib import Path
-from typing import BinaryIO, TYPE_CHECKING
+from typing import TYPE_CHECKING, BinaryIO
 from uuid import uuid4
 
 from structlog import get_logger
 
-from ingest_core.models.asset import Asset, AssetType, AssetStatus
+from ingest_core.models.asset import Asset, AssetStatus, AssetType
 
 if TYPE_CHECKING:
     from ingest_core.container.container import Container

@@ -11,20 +11,20 @@ Handles all environment variables and configuration for:
 """
 
 from ingest_core.config.settings import (
-    Settings,
-    get_settings,
-    PathSettings,
-    StorageSettings,
-    MongoDBSettings,
-    QdrantSettings,
-    SQLiteSettings,
+    APISettings,
     GeminiSettings,
     LocalVLMSettings,
-    WhisperSettings,
-    ProcessingSettings,
-    APISettings,
     LoggingSettings,
+    MongoDBSettings,
+    PathSettings,
     PluginSettings,
+    ProcessingSettings,
+    QdrantSettings,
+    Settings,
+    SQLiteSettings,
+    StorageSettings,
+    WhisperSettings,
+    get_settings,
 )
 
 __all__ = [

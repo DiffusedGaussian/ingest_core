@@ -1,30 +1,31 @@
 import asyncio
+import mimetypes
 import os
 import sys
 from pathlib import Path
-import mimetypes
 
 # Add the project root to sys.path
 sys.path.append(os.getcwd())
 
-from ingest_core.container.container import Container
 from ingest_core.config.settings import get_settings
+from ingest_core.container.container import Container
+
 
 async def test_ingestion():
     # 1. Initialize settings and container
     settings = get_settings()
-    
+
     # Force local backends for testing
     settings.database_backend = "sqlite"
     settings.vector_database_backend = "local"
-    
+
     container = Container(settings)
-    
+
     print(f"--- Testing Ingestion with {settings.database_backend} DB and {settings.vector_database_backend} Vector backend ---")
-    
+
     # 2. Startup container (initializes DB connections)
     await container.startup()
-    
+
     try:
         # 3. Find the test file
         test_file_path = Path("data/Sometimes-Sweater_CSW_Mellow-Mauve_18.jpg")
@@ -33,7 +34,7 @@ async def test_ingestion():
             return
 
         print(f"Ingesting file: {test_file_path.name}")
-        
+
         # 4. Get ingestion service
         service = container.ingestion_service
 
@@ -45,7 +46,7 @@ async def test_ingestion():
                 filename=test_file_path.name,
                 content_type=mime_type or "image/jpeg"
             )
-            
+
         print(f"Successfully ingested asset!")
         print(f"ID: {asset.id}")
         print(f"Status: {asset.status}")

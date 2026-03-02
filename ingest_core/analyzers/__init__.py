@@ -11,10 +11,10 @@ All analyzers implement the BaseAnalyzer protocol.
 New analyzers can be registered with the DI container.
 """
 
-from ingest_core.analyzers.base import BaseAnalyzer, AnalyzerResult
+from ingest_core.analyzers.base import AnalyzerResult, BaseAnalyzer
 from ingest_core.analyzers.exif import EXIFAnalyzer
-from ingest_core.analyzers.phash import PerceptualHashAnalyzer
 from ingest_core.analyzers.objects import ObjectDetectionAnalyzer
+from ingest_core.analyzers.phash import PerceptualHashAnalyzer
 from ingest_core.analyzers.vlm import VLMAnalyzer
 
 __all__ = [
