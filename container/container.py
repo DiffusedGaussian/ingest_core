@@ -61,43 +61,49 @@ class Container:
     # -------------------------------------------------------------------------
 
     @property
-    def mongodb(self):
+    def db(self):
         """
-        Get MongoDB client.
+        Get the primary document database client based on configuration.
+        """
+        if "db" not in self._instances:
+            if self._settings.database_backend == "mongodb":
+                from ingest_core.database.mongodb import MongoDBClient
+                self._instances["db"] = MongoDBClient(self._settings.mongodb)
+            else:
+                from ingest_core.database.sqlite import SQLiteClient
+                self._instances["db"] = SQLiteClient(self._settings.sqlite)
+        return self._instances["db"]
 
-        Returns:
-            MongoDBClient: MongoDB database client
+    @property
+    def vector_db(self):
         """
-        if "mongodb" not in self._instances:
-            from ingest_core.database.mongodb import MongoDBClient
-            self._instances["mongodb"] = MongoDBClient(self._settings.mongodb)
-        return self._instances["mongodb"]
+        Get the vector database client based on configuration.
+        """
+        if "vector_db" not in self._instances:
+            if self._settings.vector_database_backend == "qdrant":
+                from ingest_core.database.qdrant import QdrantRepository
+                self._instances["vector_db"] = QdrantRepository(self._settings.qdrant)
+            else:
+                # Fallback to local/mock vector storage if needed
+                # For now, we still use Qdrant or a local implementation
+                from ingest_core.database.qdrant import QdrantRepository
+                self._instances["vector_db"] = QdrantRepository(self._settings.qdrant)
+        return self._instances["vector_db"]
+
+    @property
+    def mongodb(self):
+        """Deprecated: Use .db instead for backend-agnostic code."""
+        return self.db
 
     @property
     def qdrant(self):
-        """
-        Get Qdrant vector database client.
-
-        Returns:
-            QdrantClient: Qdrant client for embeddings
-        """
-        if "qdrant" not in self._instances:
-            from ingest_core.database.qdrant import QdrantRepository
-            self._instances["qdrant"] = QdrantRepository(self._settings.qdrant)
-        return self._instances["qdrant"]
+        """Deprecated: Use .vector_db instead for backend-agnostic code."""
+        return self.vector_db
 
     @property
     def sqlite(self):
-        """
-        Get SQLite client for lightweight local storage.
-
-        Returns:
-            SQLiteClient: SQLite database client
-        """
-        if "sqlite" not in self._instances:
-            from ingest_core.database.sqlite import SQLiteClient
-            self._instances["sqlite"] = SQLiteClient(self._settings.sqlite)
-        return self._instances["sqlite"]
+        """Deprecated: Use .db instead for backend-agnostic code."""
+        return self.db
 
     # -------------------------------------------------------------------------
     # Analyzers (Pluggable)
@@ -193,9 +199,12 @@ class Container:
         self.load_default_analyzers()
 
         # Initialize database connections
-        await self.mongodb.connect()
-        await self.qdrant.initialize()
-        await self.sqlite.initialize()
+        if self._settings.database_backend == "mongodb":
+            await self.db.connect()
+        else:
+            await self.db.initialize()
+
+        await self.vector_db.initialize()
 
     async def shutdown(self) -> None:
         """
@@ -203,12 +212,14 @@ class Container:
 
         Called on application shutdown.
         """
-        if "mongodb" in self._instances:
-            await self.mongodb.disconnect()
-        if "qdrant" in self._instances:
-            await self.qdrant.close()
-        if "sqlite" in self._instances:
-            await self.sqlite.close()
+        if "db" in self._instances:
+            if self._settings.database_backend == "mongodb":
+                await self.db.disconnect()
+            else:
+                await self.db.close()
+
+        if "vector_db" in self._instances:
+            await self.vector_db.close()
 
 
 @lru_cache

@@ -184,6 +184,8 @@ class Settings(BaseSettings):
 
     # Environment
     env: Literal["development", "staging", "production"] = Field(default="development")
+    database_backend: Literal["mongodb", "sqlite"] = Field(default="mongodb")
+    vector_database_backend: Literal["qdrant", "local"] = Field(default="qdrant")
 
     # Nested settings groups
     paths: PathSettings = Field(default_factory=PathSettings)
