@@ -94,10 +94,15 @@ class SQLiteSettings(BaseSettings):
 class GeminiSettings(BaseSettings):
     """Google Gemini VLM configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="INGEST_")
+    model_config = SettingsConfigDict(
+        env_prefix="GEMINI_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
-    gemini_api_key: str | None = Field(default=None)
-    gemini_model: str = Field(default="gemini-1.5-flash")
+    api_key: str | None = Field(default=None)
+    model: str = Field(default="gemini-3-flash-preview")
 
 
 class LocalVLMSettings(BaseSettings):

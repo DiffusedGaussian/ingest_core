@@ -8,5 +8,6 @@ Services orchestrate the application logic:
 
 from ingest_core.services.asset import AssetService
 from ingest_core.services.ingestion import IngestionService
+from ingest_core.services.lineage import LineageService
 
-__all__ = ["IngestionService", "AssetService"]
+__all__ = ["IngestionService", "AssetService", "LineageService"]

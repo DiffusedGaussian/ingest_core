@@ -13,8 +13,9 @@ Design principles:
 - Pluggable: Analyzers can be registered dynamically
 """
 
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Any, Callable, TypeVar
+from typing import Any, TypeVar
 
 from ingest_core.config import Settings, get_settings
 
@@ -185,6 +186,39 @@ class Container:
             from ingest_core.services.asset import AssetService
             self._instances["asset_service"] = AssetService(self)
         return self._instances["asset_service"]
+
+    @property
+    def lineage_service(self):
+        """
+        Get the lineage tracking service.
+
+        Returns:
+            LineageService: Track relationships between assets
+        """
+        if "lineage_service" not in self._instances:
+            from ingest_core.services.lineage import LineageService
+            self._instances["lineage_service"] = LineageService(self)
+        return self._instances["lineage_service"]
+
+    @property
+    def prompt_generator(self):
+        """
+        Get the prompt generator service.
+
+        Returns:
+            PromptGeneratorService: Analyze images and generate video prompts
+        """
+        if "prompt_generator" not in self._instances:
+            from ingest_core.services.prompt_generator import PromptGeneratorService
+            self._instances["prompt_generator"] = PromptGeneratorService(self)
+        return self._instances["prompt_generator"]
+
+    @property
+    def lineage_service(self):
+        if "lineage_service" not in self._instances:
+            from ingest_core.services.lineage import LineageService
+            self._instances["lineage_service"] = LineageService(self)
+        return self._instances["lineage_service"]
 
     # -------------------------------------------------------------------------
     # Lifecycle

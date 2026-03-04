@@ -79,14 +79,12 @@ class SQLiteClient:
                 CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status);
                 CREATE INDEX IF NOT EXISTS idx_assets_created ON assets(created_at);
 
-                -- Full-text search on filenames and metadata
+                -- Full-text search (standalone, no content sync)
                 CREATE VIRTUAL TABLE IF NOT EXISTS assets_fts USING fts5(
                     id,
                     original_filename,
                     tags,
-                    description,
-                    content='assets',
-                    content_rowid='rowid'
+                    description
                 );
 
                 -- Lineage records
@@ -96,39 +94,13 @@ class SQLiteClient:
                     target_asset_id TEXT NOT NULL,
                     relationship_type TEXT NOT NULL,
                     created_at TEXT NOT NULL,
-                    data TEXT NOT NULL,  -- Full JSON document
+                    data TEXT NOT NULL,
                     FOREIGN KEY (source_asset_id) REFERENCES assets(id),
                     FOREIGN KEY (target_asset_id) REFERENCES assets(id)
                 );
 
                 CREATE INDEX IF NOT EXISTS idx_lineage_source ON lineage(source_asset_id);
                 CREATE INDEX IF NOT EXISTS idx_lineage_target ON lineage(target_asset_id);
-
-                -- Trigger to keep FTS in sync
-                CREATE TRIGGER IF NOT EXISTS assets_ai AFTER INSERT ON assets BEGIN
-                    INSERT INTO assets_fts(id, original_filename, tags, description)
-                    VALUES (
-                        new.id,
-                        new.original_filename,
-                        json_extract(new.data, '$.extra_metadata.tags'),
-                        json_extract(new.data, '$.extra_metadata.vlm.description')
-                    );
-                END;
-
-                CREATE TRIGGER IF NOT EXISTS assets_ad AFTER DELETE ON assets BEGIN
-                    DELETE FROM assets_fts WHERE id = old.id;
-                END;
-
-                CREATE TRIGGER IF NOT EXISTS assets_au AFTER UPDATE ON assets BEGIN
-                    DELETE FROM assets_fts WHERE id = old.id;
-                    INSERT INTO assets_fts(id, original_filename, tags, description)
-                    VALUES (
-                        new.id,
-                        new.original_filename,
-                        json_extract(new.data, '$.extra_metadata.tags'),
-                        json_extract(new.data, '$.extra_metadata.vlm.description')
-                    );
-                END;
             """)
             await self._conn.commit()
 

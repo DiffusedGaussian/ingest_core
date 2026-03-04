@@ -62,8 +62,11 @@ coverage.xml
 # Database and Storage
 *.sqlite
 *.db
+*.db-shm
+*.db-wal
 storage_data/
 temp_uploads/
+data/
 
 # Logging
 *.log

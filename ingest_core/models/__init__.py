@@ -16,6 +16,12 @@ from ingest_core.models.analysis import (
 )
 from ingest_core.models.asset import Asset, AssetStatus, AssetType
 from ingest_core.models.asset_3d import Asset3D, Asset3DMetadata
+from ingest_core.models.generation import (
+    GenerationJob,
+    GenerationJobSummary,
+    GeneratorType,
+    JobStatus,
+)
 from ingest_core.models.image import ImageAsset, ImageMetadata
 from ingest_core.models.lineage import LineageRecord, LineageType
 from ingest_core.models.video import KeyFrame, VideoAsset, VideoMetadata
