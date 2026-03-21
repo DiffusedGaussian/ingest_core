@@ -4,18 +4,18 @@ from pydantic import BaseModel, Field
 
 class PromptTemplate(BaseModel):
     """Custom prompt template."""
-    
+
     id: str
     name: str
     description: str | None = None
-    
+
     # Template string with placeholders
     # e.g., "{subject} in {location}. {camera}. {motion}. {style}"
     template: str
-    
+
     # Default values for placeholders
     defaults: dict[str, str] = Field(default_factory=dict)
-    
+
     # Required fields from analysis
     required_fields: list[str] = Field(default_factory=list)
 
