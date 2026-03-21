@@ -3,7 +3,7 @@ Asset management service.
 """
 
 from datetime import datetime
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from structlog import get_logger

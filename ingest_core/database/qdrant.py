@@ -2,7 +2,7 @@
 Qdrant vector database repository.
 """
 
-from typing import Any, List
+from typing import Any
 from uuid import UUID
 
 from qdrant_client import AsyncQdrantClient
@@ -80,7 +80,7 @@ class QdrantRepository:
     async def upsert(
         self,
         id: str | UUID,
-        vector: List[float],
+        vector: list[float],
         payload: dict[str, Any] | None = None
     ) -> None:
         """
@@ -107,10 +107,10 @@ class QdrantRepository:
 
     async def search(
         self,
-        vector: List[float],
+        vector: list[float],
         limit: int = 10,
         score_threshold: float | None = None
-    ) -> List[models.ScoredPoint]:
+    ) -> list[models.ScoredPoint]:
         """
         Search for similar vectors.
 

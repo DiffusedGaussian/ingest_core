@@ -14,7 +14,7 @@ Structure:
 - routes/: Endpoint handlers
 """
 
-from ingest_core.api.app import create_app, app
+from ingest_core.api.app import app, create_app
 from ingest_core.api.routes import router
 
 __all__ = ["create_app", "app", "router"]

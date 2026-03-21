@@ -5,7 +5,8 @@ Defines the contract for all storage backends.
 """
 
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, BinaryIO
+from collections.abc import AsyncGenerator
+from typing import BinaryIO
 
 
 class StorageBackend(ABC):

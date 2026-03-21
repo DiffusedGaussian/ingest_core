@@ -213,13 +213,6 @@ class Container:
             self._instances["prompt_generator"] = PromptGeneratorService(self)
         return self._instances["prompt_generator"]
 
-    @property
-    def lineage_service(self):
-        if "lineage_service" not in self._instances:
-            from ingest_core.services.lineage import LineageService
-            self._instances["lineage_service"] = LineageService(self)
-        return self._instances["lineage_service"]
-
     # -------------------------------------------------------------------------
     # Lifecycle
     # -------------------------------------------------------------------------

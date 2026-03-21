@@ -33,4 +33,5 @@ __all__ = [
     "Asset3D", "Asset3DMetadata",
     "AnalysisResult", "VLMDescription", "PerceptualHash", "ObjectDetection",
     "LineageRecord", "LineageType",
+    "GenerationJob", "GenerationJobSummary", "GeneratorType", "JobStatus",
 ]

@@ -3,12 +3,14 @@ import csv
 import io
 from typing import Any
 from uuid import UUID
+
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
+
 from ingest_core.api.dependencies import ContainerDep
-from ingest_core.models.video_prompt import CameraMovement, MovementSpeed
 from ingest_core.models.prompt_template import TEMPLATES, PromptTemplate
+from ingest_core.models.video_prompt import CameraMovement, MovementSpeed
 
 router = APIRouter(tags=["prompts"])
 
@@ -75,7 +77,7 @@ async def export_prompts(
 ) -> Any:
     """Export all generated prompts to JSON or CSV format."""
     assets, _ = await container.db.list_assets(limit=limit)
-    
+
     prompts = []
     for asset in assets:
         latest = asset.extra_metadata.get("video_prompt_latest")
@@ -89,7 +91,7 @@ async def export_prompts(
                 "duration": latest.get("recommended_duration", 5),
                 "generator": latest.get("target_generator", "flux"),
             })
-    
+
     if format == "csv":
         output = io.StringIO()
         if prompts:
@@ -101,7 +103,7 @@ async def export_prompts(
             media_type="text/csv",
             headers={"Content-Disposition": "attachment; filename=prompts.csv"}
         )
-    
+
     return {"prompts": prompts, "count": len(prompts)}
 
 
@@ -135,7 +137,7 @@ async def generate_prompt_with_template(
     """Generate a prompt using a custom template."""
     if request.template_id not in TEMPLATES:
         raise HTTPException(status_code=404, detail=f"Template '{request.template_id}' not found")
-    
+
     try:
         result = await container.prompt_generator.generate_prompt_with_template(
             asset_id=asset_id,

@@ -5,7 +5,7 @@ description = "Foundation data layer for generative AI - sophisticated ingestion
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 license = { text = "MIT" }
-authors = [{ name = "Your Name", email = "you@example.com" }]
+authors = [{ name = "Your Name", email = "Alessandroleone894@gmail.com" }]
 
 dependencies = [
     # Core
@@ -67,7 +67,10 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
-ignore = ["E501"]
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+    "B008",  # Do not perform function calls in argument defaults (FastAPI uses this pattern)
+]
 
 [tool.mypy]
 python_version = "3.11"

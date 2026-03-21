@@ -8,7 +8,7 @@ Settings are organized into logical groups:
 - PathSettings: All directory paths
 - StorageSettings: File storage backend config
 - MongoDBSettings: Document store config
-- QdrantSettings: Vector store config  
+- QdrantSettings: Vector store config
 - SQLiteSettings: Lightweight local DB config
 - GeminiSettings: Google Gemini VLM config
 - LocalVLMSettings: Local model config (LLaVA)

@@ -4,7 +4,6 @@ Google Cloud Storage backend.
 Used for production deployments.
 """
 
-import io
 from typing import BinaryIO
 
 from google.cloud import storage
