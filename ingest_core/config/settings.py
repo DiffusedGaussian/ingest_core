@@ -8,7 +8,7 @@ Settings are organized into logical groups:
 - PathSettings: All directory paths
 - StorageSettings: File storage backend config
 - MongoDBSettings: Document store config
-- QdrantSettings: Vector store config
+- QdrantSettings: Vector store config  
 - SQLiteSettings: Lightweight local DB config
 - GeminiSettings: Google Gemini VLM config
 - LocalVLMSettings: Local model config (LLaVA)
@@ -172,6 +172,146 @@ class PluginSettings(BaseSettings):
         return [a.strip() for a in self.enabled_analyzers.split(",") if a.strip()]
 
 
+# =============================================================================
+# Model Adapter Settings (Video/Image Generation)
+# =============================================================================
+
+class KlingAdapterSettings(BaseSettings):
+    """Kling video model adapter configuration."""
+
+    model_config = SettingsConfigDict(env_prefix="KLING_")
+
+    version: str = Field(default="1.5")
+    max_prompt_length: int = Field(default=500)
+    default_separator: str = Field(default=". ")
+    
+    # Category order in compiled prompt
+    category_order: list[str] = Field(
+        default=["subject", "appearance", "environment", "lighting", 
+                 "camera", "motion", "mood", "style", "technical"]
+    )
+    
+    # Camera movement vocabulary mapping
+    camera_vocabulary: dict[str, str] = Field(default_factory=lambda: {
+        "static": "static shot, camera holds steady",
+        "dolly_in": "camera slowly pushes in toward subject",
+        "dolly_out": "camera smoothly pulls back from subject",
+        "pan_left": "camera pans left across scene",
+        "pan_right": "camera pans right across scene",
+        "orbit_left": "camera orbits left around subject",
+        "orbit_right": "camera orbits right around subject",
+        "tilt_up": "camera tilts upward",
+        "tilt_down": "camera tilts downward",
+        "crane_up": "camera cranes upward revealing scene",
+        "crane_down": "camera descends from above",
+        "handheld": "subtle handheld camera movement",
+        "tracking": "camera tracks alongside subject",
+        "fpv": "first person perspective moving through scene",
+        "zoom_in": "slow zoom in",
+        "zoom_out": "slow zoom out",
+    })
+    
+    # Lighting vocabulary mapping
+    lighting_vocabulary: dict[str, str] = Field(default_factory=lambda: {
+        "golden_hour": "warm golden hour sunlight",
+        "blue_hour": "soft blue hour ambient light",
+        "studio": "professional studio lighting setup",
+        "natural": "natural daylight",
+        "dramatic": "dramatic lighting with strong shadows",
+        "soft": "soft diffused lighting",
+        "backlit": "backlit with rim lighting",
+        "neon": "neon lighting with colorful glow",
+        "overcast": "soft overcast daylight",
+    })
+    
+    # Default negative prompt
+    negative_prompt: str = Field(
+        default="blurry, distorted, low quality, watermark, text overlay, "
+                "logo, oversaturated, underexposed, grainy, compression artifacts, "
+                "duplicate frames, morphing errors, inconsistent lighting"
+    )
+    
+    # Quality terms to append
+    quality_boosters: list[str] = Field(
+        default=["high quality", "4K", "detailed", "professional"]
+    )
+
+
+class RunwayAdapterSettings(BaseSettings):
+    """Runway Gen-3 adapter configuration."""
+
+    model_config = SettingsConfigDict(env_prefix="RUNWAY_")
+
+    version: str = Field(default="gen3")
+    max_prompt_length: int = Field(default=400)
+    default_separator: str = Field(default=", ")
+    
+    category_order: list[str] = Field(
+        default=["subject", "environment", "camera", "motion", "style", "technical"]
+    )
+    
+    # Runway prefers simpler camera terms
+    camera_vocabulary: dict[str, str] = Field(default_factory=lambda: {
+        "static": "static",
+        "dolly_in": "push in",
+        "dolly_out": "pull out",
+        "pan_left": "pan left",
+        "pan_right": "pan right",
+        "orbit_left": "orbit left",
+        "orbit_right": "orbit right",
+        "tilt_up": "tilt up",
+        "tilt_down": "tilt down",
+        "handheld": "handheld",
+        "tracking": "tracking shot",
+    })
+    
+    negative_prompt: str = Field(
+        default="blurry, low quality, distorted, watermark"
+    )
+
+
+class MidjourneyAdapterSettings(BaseSettings):
+    """Midjourney adapter configuration."""
+
+    model_config = SettingsConfigDict(env_prefix="MIDJOURNEY_")
+
+    version: str = Field(default="6.1")
+    max_prompt_length: int = Field(default=600)
+    default_separator: str = Field(default=", ")
+    
+    # Midjourney uses different order - style/aesthetic first
+    category_order: list[str] = Field(
+        default=["subject", "appearance", "environment", "lighting", "style", "technical"]
+    )
+    
+    # Midjourney-specific style suffixes
+    style_suffixes: list[str] = Field(
+        default=["--ar 16:9", "--v 6.1", "--s 250"]
+    )
+    
+    # No camera/motion for still images
+    exclude_categories: list[str] = Field(default=["camera", "motion"])
+
+
+class PromptAdapterSettings(BaseSettings):
+    """
+    Unified prompt adapter configuration.
+    
+    Holds settings for all supported video/image generation models.
+    Select the active adapter via default_adapter setting.
+    """
+
+    model_config = SettingsConfigDict(env_prefix="INGEST_")
+
+    # Which adapter to use by default
+    default_adapter: Literal["kling", "runway", "midjourney"] = Field(default="kling")
+    
+    # Per-model settings
+    kling: KlingAdapterSettings = Field(default_factory=KlingAdapterSettings)
+    runway: RunwayAdapterSettings = Field(default_factory=RunwayAdapterSettings)
+    midjourney: MidjourneyAdapterSettings = Field(default_factory=MidjourneyAdapterSettings)
+
+
 class Settings(BaseSettings):
     """
     Main settings container aggregating all configuration groups.
@@ -205,6 +345,7 @@ class Settings(BaseSettings):
     api: APISettings = Field(default_factory=APISettings)
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     plugins: PluginSettings = Field(default_factory=PluginSettings)
+    adapters: PromptAdapterSettings = Field(default_factory=PromptAdapterSettings)
 
     @property
     def is_production(self) -> bool:

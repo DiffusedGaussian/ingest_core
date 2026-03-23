@@ -3,9 +3,9 @@ name = "ingest-core"
 version = "0.1.0"
 description = "Foundation data layer for generative AI - sophisticated ingestion pipeline for images, videos, and 3D assets"
 readme = "README.md"
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.11,<3.15"
 license = { text = "MIT" }
-authors = [{ name = "Your Name", email = "Alessandroleone894@gmail.com" }]
+authors = [{ name = "Alessandro Leone", email = "Alessandroleone894@gmail.com" }]
 
 dependencies = [
     # Core
@@ -60,17 +60,6 @@ ingest = "ingest_core.cli.main:app"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.ruff]
-target-version = "py311"
-line-length = 100
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
-ignore = [
-    "E501",  # Line too long (handled by formatter)
-    "B008",  # Do not perform function calls in argument defaults (FastAPI uses this pattern)
-]
 
 [tool.mypy]
 python_version = "3.11"
