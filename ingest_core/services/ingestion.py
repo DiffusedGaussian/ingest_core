@@ -162,3 +162,72 @@ class IngestionService:
         except Exception as e:
             logger.error("Processing failed", id=str(asset.id), error=str(e))
             await self.container.asset_service.update_status(asset.id, AssetStatus.FAILED, str(e))
+
+    async def ingest_bytes(
+        self,
+        content: bytes,
+        filename: str,
+        asset_type: str = "image",
+        run_processing: bool = False,
+    ) -> Asset:
+        """
+        Ingest raw bytes into the system.
+        
+        This is the preferred method for API uploads where we already
+        have the file content in memory.
+        
+        Args:
+            content: Raw file bytes
+            filename: Original filename
+            asset_type: Type of asset (image, video, asset_3d)
+            run_processing: Whether to run full processing pipeline
+            
+        Returns:
+            Created Asset
+        """
+        import mimetypes
+        from io import BytesIO
+        
+        # 1. Generate ID and paths
+        asset_id = uuid4()
+        extension = Path(filename).suffix.lower()
+        storage_path = f"assets/{asset_id}{extension}"
+        
+        # Guess MIME type
+        mime_type, _ = mimetypes.guess_type(filename)
+        if not mime_type:
+            mime_type = "application/octet-stream"
+        
+        # 2. Save to storage
+        logger.info("Saving bytes to storage", path=storage_path, size=len(content))
+        file_obj = BytesIO(content)
+        saved_path = await self.container.storage.save(file_obj, storage_path, mime_type)
+        
+        # 3. Map string to enum
+        type_map = {
+            "image": AssetType.IMAGE,
+            "video": AssetType.VIDEO,
+            "asset_3d": AssetType.ASSET_3D,
+        }
+        asset_type_enum = type_map.get(asset_type, AssetType.IMAGE)
+        
+        # 4. Create asset record
+        asset = Asset(
+            id=asset_id,
+            asset_type=asset_type_enum,
+            status=AssetStatus.PENDING if run_processing else AssetStatus.COMPLETED,
+            original_filename=filename,
+            file_extension=extension,
+            file_size_bytes=len(content),
+            mime_type=mime_type,
+            storage_path=saved_path,
+        )
+        
+        await self.container.asset_service.create(asset)
+        logger.info("Asset created", asset_id=str(asset_id), type=asset_type)
+        
+        # 5. Optionally run processing
+        if run_processing:
+            await self.process_asset(asset)
+        
+        return asset

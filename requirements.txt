@@ -1,47 +1,38 @@
-aiofiles==25.1.0
-aiosqlite==0.22.1
-annotated-doc==0.0.4
-annotated-types==0.7.0
-anyio==4.12.1
-certifi==2026.2.25
-click==8.3.1
-dnspython==2.8.0
-faiss-cpu==1.13.2
-fastapi==0.135.1
-google-generativeai
-grpcio==1.78.0
-h11==0.16.0
-h2==4.3.0
-hpack==4.1.0
-httpcore==1.0.9
-httptools==0.7.1
-httpx==0.28.1
-hyperframe==6.1.0
-idna==3.11
-ImageHash==4.3.2
-motor==3.7.1
-numpy==2.4.2
-opencv-python==4.13.0.92
-packaging==26.0
-pillow==12.1.1
-portalocker==3.2.0
-protobuf==7.34.0
-pydantic==2.12.5
-pydantic-settings==2.13.1
-pydantic_core==2.41.5
-pymongo==4.16.0
-python-dotenv==1.2.2
-PyWavelets==1.9.0
-PyYAML==6.0.3
-qdrant-client==1.17.0
-scipy==1.17.1
-starlette==0.52.1
-structlog==25.5.0
-typing-inspection==0.4.2
-typing_extensions==4.15.0
-urllib3==2.6.3
-uvicorn==0.41.0
-uvloop==0.22.1
-watchfiles==1.1.1
-websockets==16.0
+# Core
+pydantic>=2.0,<3.0
+pydantic-settings>=2.0,<3.0
+python-dotenv>=1.0.0
+python-multipart>=0.0.22
 
+# API
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+
+# Database - Document Stores
+pymongo>=4.6.0
+motor>=3.0.0
+aiosqlite>=0.19.0
+
+# Database - Vector Stores
+qdrant-client>=1.7.0
+faiss-cpu>=1.7.0
+
+# Storage
+google-cloud-storage>=2.14.0
+aiofiles>=23.2.0
+
+# Media Processing
+pillow>=10.2.0
+opencv-python-headless>=4.9.0
+imagehash>=4.3.1
+
+# ML & VLM
+google-generativeai>=0.4.0
+openai-whisper>=20231117
+transformers>=4.37.0
+torch>=2.1.0
+
+# Utilities
+httpx>=0.26.0
+structlog>=24.1.0

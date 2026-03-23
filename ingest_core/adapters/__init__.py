@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 from ingest_core.adapters.base import BaseModelAdapter
 from ingest_core.adapters.kling import KlingAdapter
+from ingest_core.adapters.flux import FluxAdapter
 
 if TYPE_CHECKING:
     from ingest_core.config.settings import Settings
@@ -16,6 +17,7 @@ if TYPE_CHECKING:
 __all__ = [
     "BaseModelAdapter",
     "KlingAdapter",
+    "FluxAdapter",
     "get_adapter",
     "ADAPTERS",
 ]
@@ -24,6 +26,7 @@ __all__ = [
 # Registry of available adapters
 ADAPTERS: dict[str, type[BaseModelAdapter]] = {
     "kling": KlingAdapter,
+    "flux": FluxAdapter,
 }
 
 
