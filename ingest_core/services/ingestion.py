@@ -2,7 +2,6 @@
 Ingestion orchestration service.
 """
 
-import mimetypes
 from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO
 from uuid import uuid4

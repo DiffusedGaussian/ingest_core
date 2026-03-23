@@ -47,7 +47,7 @@ async def test_ingestion():
                 content_type=mime_type or "image/jpeg"
             )
 
-        print(f"Successfully ingested asset!")
+        print("Successfully ingested asset!")
         print(f"ID: {asset.id}")
         print(f"Status: {asset.status}")
         print(f"Type: {asset.asset_type}")

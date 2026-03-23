@@ -5,7 +5,6 @@ Handles video-specific operations including keyframe extraction
 and audio transcription.
 """
 
-import tempfile
 from pathlib import Path
 from typing import Any
 

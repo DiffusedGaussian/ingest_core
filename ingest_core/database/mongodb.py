@@ -2,7 +2,6 @@
 MongoDB client wrapper.
 """
 
-from typing import Any
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from structlog import get_logger

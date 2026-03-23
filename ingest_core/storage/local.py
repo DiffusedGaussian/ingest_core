@@ -3,12 +3,12 @@ Local filesystem storage implementation.
 """
 
 import os
+from collections.abc import AsyncGenerator
 from pathlib import Path
-from typing import AsyncGenerator, BinaryIO
+from typing import BinaryIO
 
 import aiofiles
 
-from ingest_core.config import Settings
 from ingest_core.storage.base import StorageBackend
 
 

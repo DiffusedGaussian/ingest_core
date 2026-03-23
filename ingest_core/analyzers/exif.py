@@ -7,7 +7,7 @@ Extracts technical metadata from images (camera info, GPS, etc.).
 from pathlib import Path
 
 from PIL import Image
-from PIL.ExifTags import GPSTAGS, TAGS
+from PIL.ExifTags import TAGS
 
 from ingest_core.analyzers.base import AnalyzerResult, BaseAnalyzer
 

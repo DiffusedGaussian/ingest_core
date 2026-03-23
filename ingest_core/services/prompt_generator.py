@@ -120,17 +120,17 @@ class PromptGeneratorService:
         """Generate prompt using a custom template."""
         # Get analysis
         analysis = await self.analyze_image(asset_id)
-        
+
         # Get template
         template = TEMPLATES.get(template_id)
         if not template:
             # Fall back to default generation
             return await self.generate_prompt(asset_id, duration=duration, target_generator=target_generator)
-        
+
         # Build context from analysis
         camera = self._suggest_camera(analysis)
         speed = analysis.motion.recommended_speed
-        
+
         context = {
             "subject": analysis.subject.description,
             "location": analysis.scene.location,
@@ -142,23 +142,23 @@ class PromptGeneratorService:
             "environment": self._compose_environment_prompt(analysis),
             "clothing": ", ".join(analysis.subject.movable_elements[:2]) if analysis.subject.movable_elements else "clothing",
         }
-        
+
         # Apply template defaults
         for key, value in template.defaults.items():
             if not context.get(key) or context[key] == "":
                 context[key] = value
-        
+
         # Apply user overrides
         if overrides:
             context.update(overrides)
-        
+
         # Format template - handle missing keys gracefully
         try:
             prompt = template.template.format(**context)
         except KeyError as e:
             logger.warning(f"Template missing key: {e}, using default generation")
             return await self.generate_prompt(asset_id, duration=duration, target_generator=target_generator)
-        
+
         result = GeneratedVideoPrompt(
             asset_id=asset_id,
             analysis_id=analysis.id,
@@ -169,7 +169,7 @@ class PromptGeneratorService:
             recommended_speed=speed,
             target_generator=target_generator,
         )
-        
+
         await self._save_prompt(asset_id, result)
         return result
 

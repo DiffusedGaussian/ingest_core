@@ -366,7 +366,7 @@ class AssetsCollection:
         updated_at = document.get("updated_at", datetime.utcnow().isoformat())
 
         await self._conn.execute(
-            """INSERT INTO assets 
+            """INSERT INTO assets
                (id, asset_type, status, original_filename, mime_type, created_at, updated_at, data)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (
@@ -429,7 +429,7 @@ class AssetsCollection:
             updated_at = doc.get("updated_at", datetime.utcnow().isoformat())
 
             await self._conn.execute(
-                """UPDATE assets 
+                """UPDATE assets
                    SET asset_type = ?, status = ?, updated_at = ?, data = ?
                    WHERE id = ?""",
                 (
@@ -492,7 +492,7 @@ class LineageCollection:
         doc_id = document.get("id") or document.get("_id")
 
         await self._conn.execute(
-            """INSERT INTO lineage 
+            """INSERT INTO lineage
                (id, source_asset_id, target_asset_id, relationship_type, created_at, data)
                VALUES (?, ?, ?, ?, ?, ?)""",
             (
