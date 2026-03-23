@@ -87,7 +87,7 @@ def test_manual_prompt_creation():
     return prompt
 
 
-def test_kling_compilation(prompt: StructuredPrompt):
+def test_kling_compilation(sample_structured_prompt: StructuredPrompt):
     """Test compiling with Kling adapter (config from settings)."""
     print("\n" + "="*60)
     print("TEST 2: Kling Adapter Compilation (Settings-based)")
@@ -95,6 +95,7 @@ def test_kling_compilation(prompt: StructuredPrompt):
     
     settings = get_settings()
     adapter = get_adapter("kling", settings)
+    prompt = sample_structured_prompt
     
     print(f"Using adapter: {adapter.name} v{adapter.version}")
     print(f"Config from: settings.adapters.kling")
@@ -115,12 +116,13 @@ def test_kling_compilation(prompt: StructuredPrompt):
     return compiled
 
 
-def test_category_override(prompt: StructuredPrompt):
+def test_category_override(sample_structured_prompt: StructuredPrompt):
     """Test changing a single category (ablation simulation)."""
     print("\n" + "="*60)
     print("TEST 3: Category Override (Ablation)")
     print("="*60)
     
+    prompt = sample_structured_prompt
     # Clone with different lighting
     variant = prompt.clone_with_override("lighting", "studio")
     
