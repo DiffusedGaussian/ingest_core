@@ -236,6 +236,31 @@ class KlingAdapterSettings(BaseSettings):
         default=["high quality", "4K", "detailed", "professional"]
     )
 
+class FluxAdapterSettings(BaseSettings):
+    """Flux image-to-image adapter configuration."""
+    
+    model_config = SettingsConfigDict(env_prefix="FLUX_")
+    
+    version: str = Field(default="1.1")
+    max_prompt_length: int = Field(default=700)
+    default_separator: str = Field(default=", ")
+    category_order: list[str] = Field(default=["subject", "environment", "lighting", "style", "technical"])
+    transformation_prefixes: dict[str, str] = Field(default_factory=lambda: {
+        "technical": "A professional 3D CAD visualization transforming this technical line drawing into a photorealistic engineering render",
+    })
+    default_perspective: str = Field(default="isometric perspective")
+    material_vocabulary: dict[str, str] = Field(default_factory=dict)
+    lighting_vocabulary: dict[str, str] = Field(default_factory=dict)
+    default_lighting: str = Field(default="professional studio lighting with soft shadows")
+    default_environment: str = Field(default="clean white studio background")
+    default_render_style: str = Field(default="octane render, photorealistic")
+    quality_boosters: list[str] = Field(default=["8k resolution", "high detail", "sharp focus"])
+    structure_keywords: list[str] = Field(default=["preserving original geometry", "accurate proportions"])
+    negative_prompt: str = Field(default="blurry, distorted, low quality, watermark")
+    perspective_vocabulary: dict[str, str] = Field(default_factory=dict)
+    default_strength: float = Field(default=0.75)
+    default_guidance_scale: float = Field(default=7.5)
+    default_steps: int = Field(default=50)
 
 class RunwayAdapterSettings(BaseSettings):
     """Runway Gen-3 adapter configuration."""
@@ -307,6 +332,7 @@ class PromptAdapterSettings(BaseSettings):
     default_adapter: Literal["kling", "runway", "midjourney"] = Field(default="kling")
     
     # Per-model settings
+    flux: FluxAdapterSettings = Field(default_factory=FluxAdapterSettings)
     kling: KlingAdapterSettings = Field(default_factory=KlingAdapterSettings)
     runway: RunwayAdapterSettings = Field(default_factory=RunwayAdapterSettings)
     midjourney: MidjourneyAdapterSettings = Field(default_factory=MidjourneyAdapterSettings)

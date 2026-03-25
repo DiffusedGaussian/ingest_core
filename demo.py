@@ -215,7 +215,7 @@ Examples:
     upload_parser = subparsers.add_parser("upload", help="Upload and process an image")
     upload_parser.add_argument("file", help="Path to image file")
     upload_parser.add_argument("--server", default="http://localhost:8001", help="Server URL")
-    upload_parser.add_argument("--generator", default="runway", help="Target generator")
+    upload_parser.add_argument("--generator", default="flux", help="Target generator")
     upload_parser.add_argument("--duration", type=int, default=5, help="Video duration")
     
     # Status command

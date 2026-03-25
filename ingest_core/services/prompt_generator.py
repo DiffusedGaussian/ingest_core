@@ -85,27 +85,47 @@ class PromptGeneratorService:
     ) -> GeneratedVideoPrompt:
         """Generate optimized video prompt."""
         analysis = await self.analyze_image(asset_id)
-
         camera = camera_movement or self._suggest_camera(analysis)
         speed = movement_speed or analysis.motion.recommended_speed
 
-        subject_prompt = self._compose_subject_prompt(analysis)
-        camera_prompt = self._compose_camera_prompt(camera, speed)
-        environment_prompt = self._compose_environment_prompt(analysis)
-
-        full_prompt = f"{subject_prompt}. {camera_prompt}. {environment_prompt}".strip()
+        # Use Flux adapter if requested
+        if target_generator.lower() == "flux":
+            from ingest_core.adapters.flux import FluxAdapter
+            from ingest_core.models.prompt_schema import StructuredPrompt, PromptCategory, CategoryName
+            
+            adapter = FluxAdapter(self.container.settings)
+            
+            structured = StructuredPrompt(
+                asset_id=asset_id,
+                subject=PromptCategory(name=CategoryName.SUBJECT, value=analysis.subject.description),
+                appearance=PromptCategory(name=CategoryName.APPEARANCE, value=", ".join(analysis.style.color_palette) if analysis.style.color_palette else ""),
+                environment=PromptCategory(name=CategoryName.ENVIRONMENT, value=analysis.scene.location),
+                lighting=PromptCategory(name=CategoryName.LIGHTING, value=analysis.lighting.quality or "natural"),
+                camera=PromptCategory(name=CategoryName.CAMERA, value="isometric"),
+                motion=PromptCategory(name=CategoryName.MOTION, value="static"),
+                mood=PromptCategory(name=CategoryName.MOOD, value=str(analysis.mood) if analysis.mood else "neutral"),
+                style=PromptCategory(name=CategoryName.STYLE, value=analysis.style.medium or "photorealistic"),
+                technical=PromptCategory(name=CategoryName.TECHNICAL, value="8k, high detail"),
+            )
+            
+            full_prompt = adapter.compile(structured)
+        else:
+            # Original video prompt logic
+            subject_prompt = self._compose_subject_prompt(analysis)
+            camera_prompt = self._compose_camera_prompt(camera, speed)
+            environment_prompt = self._compose_environment_prompt(analysis)
+            full_prompt = f"{subject_prompt}. {camera_prompt}. {environment_prompt}".strip()
 
         result = GeneratedVideoPrompt(
             asset_id=asset_id,
             analysis_id=analysis.id,
             prompt=full_prompt,
-            prompt_components={"subject": subject_prompt, "camera": camera_prompt, "environment": environment_prompt},
+            prompt_components={"subject": analysis.subject.description, "style": analysis.style.medium},
             recommended_duration=duration,
             recommended_camera=camera,
             recommended_speed=speed,
             target_generator=target_generator,
         )
-
         await self._save_prompt(asset_id, result)
         return result
 

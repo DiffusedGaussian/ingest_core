@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 *.pyc
 *.pyo
-
+3
 # C extensions
 *.so
 
@@ -166,8 +166,3 @@ logs/
 # OS files
 .DS_Store
 Thumbs.db
-.core_ingest/
-*.dylib
-__pycache__/
-*.pyc
-.env

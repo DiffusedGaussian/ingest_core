@@ -487,3 +487,29 @@ async def _trigger_generation(
             "error": str(e),
             "prompt": prompt,
         }
+
+async def _trigger_generation(
+    container,
+    prompt: str,
+    generator: str,
+    duration: int,
+    source_asset_id: UUID,
+) -> dict[str, Any]:
+    """Trigger image/video generation."""
+    
+    if generator == "flux":
+        # Use Flux for image generation
+        result = await container.flux_generator.generate_from_asset(
+            asset_id=source_asset_id,
+            prompt=prompt,
+            strength=0.75,
+        )
+        return result
+    else:
+        # Placeholder for other generators
+        return {
+            "status": "pending",
+            "generator": generator,
+            "message": f"Generation with {generator} not implemented",
+            "prompt": prompt,
+        }

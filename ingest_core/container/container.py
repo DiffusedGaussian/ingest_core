@@ -18,9 +18,11 @@ from functools import lru_cache
 from typing import Any, TypeVar
 
 from ingest_core.config import Settings, get_settings
+from ingest_core.services.flux_generator import FluxGeneratorService
 
 T = TypeVar("T")
 
+#TODO Add gemini client here and use it in the VLMAnalyzer instead of creating a new one there. This way we can also reuse it in the prompt generator service for generating video prompts based on Gemini analysis of images.
 
 class Container:
     """
@@ -34,6 +36,7 @@ class Container:
         self._instances: dict[str, Any] = {}
         self._factories: dict[str, Callable[[], Any]] = {}
         self._analyzers: dict[str, Any] = {}
+        self.flux_generator = FluxGeneratorService(self)
 
     @property
     def settings(self) -> Settings:
@@ -248,7 +251,6 @@ class Container:
 
         if "vector_db" in self._instances:
             await self.vector_db.close()
-
 
 @lru_cache
 def get_container() -> Container:
